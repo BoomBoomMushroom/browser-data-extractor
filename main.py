@@ -12,6 +12,7 @@ defaultBrowser = Chromium(chromiumParams[0], chromiumParams[1], chromiumParams[2
 history = defaultBrowser.getHistory()
 loginData = defaultBrowser.getLoginData()
 
+passwordsAndFreq = {}
 for login in loginData:
     url = login["origin_url"]
     username = login["username_value"]
@@ -21,7 +22,14 @@ for login in loginData:
     secretKey = defaultBrowser.getSecretKey()
     password = defaultBrowser.decryptPassword(ciphertext, secretKey)
 
+    if password in passwordsAndFreq.keys(): passwordsAndFreq[password] += 1
+    else: passwordsAndFreq[password] = 1
     #print(password)
 
+#print(passwordsAndFreq)
+
 topWebsites = dataComprehention.topWebsitesVisited(history)
-print(topWebsites)
+#print(topWebsites)
+
+# clear the temp folder to remove clutter
+defaultBrowser.cleanup()
