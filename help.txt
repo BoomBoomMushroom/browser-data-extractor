@@ -1,0 +1,13 @@
+VENV
+
+# activate
+browser-data-extractor\Scripts\activate
+
+# deactivate
+deactivate
+
+
+EXE BUILD
+# make sure to build inside of the VENV because it doesn't like it outside of it?
+# one file (the exe). Aparrently if I add the "--noconsole" to the end it marks it as a virus???
+pyinstaller main.py --onefile
