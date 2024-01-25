@@ -6,9 +6,10 @@ import base64
 import win32crypt
 from Cryptodome.Cipher import AES
 
+TEMP = "./temp"
 
 def cleanUpTemp():
-    folder = "./temp"
+    folder = TEMP
     try: shutil.rmtree(folder)
     except Exception as e: print(e)
     os.makedirs(folder)
@@ -28,8 +29,8 @@ class Chromium():
 
     def getRecordsInTable(self, fName, tablePath):
         if fName not in self.ALL_FILES_DEFAULT: return
-        dest = f"./temp/{self.company}/{fName}.sqlite"
-        try: os.makedirs(f"./temp/{self.company}")
+        dest = f"{TEMP}/{self.company}/{fName}.sqlite"
+        try: os.makedirs(f"{TEMP}/{self.company}")
         except Exception as e: pass
         shutil.copy(self.PATH_DEFAULT + f"\\{fName}", dest)
         urlsJSON = getAllRecordsInTable(tablePath, dest)
