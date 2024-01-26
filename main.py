@@ -47,7 +47,7 @@ topWebsites = dataComprehention.topWebsitesVisited(history)
 #print(topWebsites)
 
 # clear the temp folder to remove clutter
-defaultBrowser.cleanup()
+#defaultBrowser.cleanup()
 
 
 username = os.getlogin()

@@ -16,7 +16,7 @@ def cleanUpTemp():
 
 class Chromium():
     def __init__(self, enviromentPath = "LOCALAPPDATA", profileAppention = "Default", path="Google\\Chrome\\User Data", company="Google") -> None:
-        cleanUpTemp()
+        #cleanUpTemp()
         self.cleanup = cleanUpTemp
 
         self.company = company
